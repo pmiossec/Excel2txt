@@ -23,15 +23,19 @@ namespace Excel2txt
                 System.Environment.Exit(2);
             }
 
+            filePath = Path.GetFullPath(filePath);
+
             Console.Write($"Extracting data from file: {filePath}");
 
-            var outputFile = args.Length == 1 ? "output.txt" : args[1];
+            var outputFile = Path.GetFullPath(args.Length == 1 ? "output.txt" : args[1]);
 
-            Console.Write($" to file: {outputFile}");
+            Console.WriteLine($" to file: {outputFile}");
 
-            //TODO: Not locking reading of excel file!!!
-            IWorkbook book1 = new XSSFWorkbook(new FileStream(filePath, FileMode.Open));
-            IWorkbook product = new XSSFWorkbook();
+            // Read content of the file that could be still locked because application is still running...
+            // doc: https://stackoverflow.com/questions/3560651/whats-the-least-invasive-way-to-read-a-locked-file-in-c-sharp-perhaps-in-unsaf
+            // and http://coding.infoconex.com/post/2009/04/21/How-do-I-open-a-file-that-is-in-use-in-C
+            using var srcStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            IWorkbook book1 = new XSSFWorkbook(srcStream);
 
             var output = new StringBuilder();
 

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Excel2txt": {
+      "commandName": "Project",
+      "commandLineArgs": "\"..\\..\\..\\..\\input_test_file.xlsx\" \"..\\..\\..\\..\\output_test_file.csv\""
+    }
+  }
+}

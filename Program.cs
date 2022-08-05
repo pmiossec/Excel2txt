@@ -10,21 +10,26 @@ namespace Excel2txt
     {
         static void Main(string[] args)
         {
-            if (args.Length < 2)
+            if (args.Length == 0)
             {
                 Console.WriteLine("Please specify a file!");
                 System.Environment.Exit(1);
             }
 
-            var filePath = args[1];
+            var filePath = args[0];
             if (!File.Exists(filePath))
             {
                 Console.WriteLine($"The file '{filePath}' doesn't exist!");
                 System.Environment.Exit(2);
             }
 
-            Console.WriteLine($"Extracting data from file: {filePath}");
-            
+            Console.Write($"Extracting data from file: {filePath}");
+
+            var outputFile = args.Length == 1 ? "output.txt" : args[1];
+
+            Console.Write($" to file: {outputFile}");
+
+            //TODO: Not locking reading of excel file!!!
             IWorkbook book1 = new XSSFWorkbook(new FileStream(filePath, FileMode.Open));
             IWorkbook product = new XSSFWorkbook();
 
@@ -44,7 +49,7 @@ namespace Excel2txt
                 }
             }
 
-            File.WriteAllText("output.txt", output.ToString());
+            File.WriteAllText(outputFile, output.ToString());
 
             static void SerializeSheet(StringBuilder output, ISheet sheet)
             {
